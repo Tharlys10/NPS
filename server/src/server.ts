@@ -1,14 +1,18 @@
+import 'reflect-metadata';
 import express from 'express';
+import './database';
+import { router } from './routes';
 
 const app = express();
 
-// use definition port
-const port = process.env.PORT || 3333
+// Definition format json
+app.use(express.json());
 
 // routes
-app.get('/', (request, response) => {
-  response.json({ message: "Hello World - NLW04 🚀" })
-})
+app.use(router);
+
+// use definition port
+const port = process.env.PORT || 3333;
 
 // init server
-app.listen(port, () => console.log("🚀 Server is running!"));
+app.listen(port, () => console.log(`🚀 Server is running! - 🛂 :${port}`));

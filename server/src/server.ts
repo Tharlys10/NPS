@@ -1,15 +1,4 @@
-import 'reflect-metadata';
-import express from 'express';
-import './database';
-import { router } from './routes';
-
-const app = express();
-
-// Definition format json
-app.use(express.json());
-
-// routes
-app.use(router);
+import { app } from "./app";
 
 // use definition port
 const port = process.env.PORT || 3333;

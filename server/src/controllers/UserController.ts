@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import { User } from '../models/User';
+import { getCustomRepository } from 'typeorm';
+import { UsersRepository } from '../repositories/UsersRepository';
 
 class UserController {
   async create(request: Request, response: Response) {
     let { name, email } = request.body;
 
-    name = name.toUpperCase();
-    email = email.toLowerCase().trim();
+    name = name?.toUpperCase();
+    email = email?.toLowerCase().trim();
 
-    // extencion repository typeorm
-    const userRepository = getRepository(User);
+    // extencion custom repository
+    const userRepository = getCustomRepository(UsersRepository);
 
     // search user fur email
     const userAlreadyExists = await userRepository.findOne({ email });
@@ -31,7 +31,7 @@ class UserController {
     // save data to the database
     await userRepository.save(user);
 
-    return response.json(user);
+    return response.status(201).json(user);
   }
 }
 

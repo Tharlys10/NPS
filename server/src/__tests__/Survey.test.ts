@@ -11,7 +11,7 @@ describe("Surveys", () => {
   });
 
   afterAll(async () => {
-    const connection = await getConnection();
+    const connection = getConnection();
     await connection.dropDatabase();
     await connection.close();
   });

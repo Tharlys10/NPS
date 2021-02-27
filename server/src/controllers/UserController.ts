@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getCustomRepository } from 'typeorm';
 import { UsersRepository } from '../repositories/UsersRepository';
 import * as yup from 'yup';
+import { AppError } from '../errors/AppError';
 
 class UserController {
   async create(request: Request, response: Response) {
@@ -19,9 +20,7 @@ class UserController {
     try {
       await schema.validate(request.body);
     } catch (err) {
-      return response.status(400).json({
-        error: err.message
-      });
+      throw new AppError(err.message);
     }
 
     // extencion custom repository
@@ -32,9 +31,7 @@ class UserController {
 
     // check if the email already exists
     if (userAlreadyExists) {
-      return response.status(409).json({
-        error: "Usuário já existente com esse e-mail!"
-      });
+      throw new AppError("Usuário já existente com esse e-mail!", 409);
     }
 
     // create obj user

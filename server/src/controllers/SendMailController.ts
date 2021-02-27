@@ -5,6 +5,7 @@ import { SurveysRepository } from "../repositories/SurveysRepository";
 import { SurveysUsersRepository } from "../repositories/SurveysUsersRepository";
 import { UsersRepository } from "../repositories/UsersRepository";
 import SendMailNpsService from "../services/SendMailNpsService";
+import { AppError } from "../errors/AppError";
 
 
 class SendMailController {
@@ -20,18 +21,14 @@ class SendMailController {
     const user = await usersRepository.findOne({ id: user_id });
 
     if (!user) {
-      return response.status(400).json({
-        error: "Usuário não encontrado!"
-      });
+      throw new AppError("Usuário não encontrado!");
     }
 
     //  survey existence check
     const survey = await surveysRepository.findOne({ id: survey_id });
 
     if (!survey) {
-      return response.status(400).json({
-        error: "Pesquisa não encontrada!"
-      });
+      throw new AppError("Pesquisa não encontrada!");
     }
 
     // mounting email information

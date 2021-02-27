@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { getCustomRepository } from 'typeorm';
 import { UsersRepository } from '../repositories/UsersRepository';
+import * as yup from 'yup';
+import { AppError } from '../errors/AppError';
 
 class UserController {
   async create(request: Request, response: Response) {
@@ -8,6 +10,18 @@ class UserController {
 
     name = name?.toUpperCase();
     email = email?.toLowerCase().trim();
+
+    // validation
+    const schema = yup.object().shape({
+      name: yup.string().required("Nome é obrigatório"),
+      email: yup.string().email("E-mail inválido").required("E-mail é obrigatório")
+    });
+
+    try {
+      await schema.validate(request.body);
+    } catch (err) {
+      throw new AppError(err.message);
+    }
 
     // extencion custom repository
     const userRepository = getCustomRepository(UsersRepository);
@@ -17,9 +31,7 @@ class UserController {
 
     // check if the email already exists
     if (userAlreadyExists) {
-      return response.status(409).json({
-        error: "Usuário já existente com esse e-mail!"
-      });
+      throw new AppError("Usuário já existente com esse e-mail!", 409);
     }
 
     // create obj user

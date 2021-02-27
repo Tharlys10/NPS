@@ -10,11 +10,11 @@ class SurveyConstroller {
     const take = !Number(amount) || Number(amount) <= 0 ? 10 : Number(amount)
 
     console.log(skip, take);
-    
+
     // extencion custom repository
     const surveysRepository = getCustomRepository(SurveysRepository);
 
-    const [ surveys, count ] = await surveysRepository.findAndCount(
+    const [surveys, count] = await surveysRepository.findAndCount(
       {
         skip,
         take

@@ -13,8 +13,8 @@ class UserController {
 
     // validation
     const schema = yup.object().shape({
-      name: yup.string().required("Nome é obrigatório"),
-      email: yup.string().email("E-mail inválido").required("E-mail é obrigatório")
+      name: yup.string().required("O nome é obrigatório"),
+      email: yup.string().email("E-mail inválido").required("o e-mail é obrigatório")
     });
 
     try {

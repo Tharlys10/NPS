@@ -1,4 +1,8 @@
 import nodemailer, { Transporter } from 'nodemailer';
+import handlebars from 'handlebars';
+import { resolve } from 'path';
+import fs from 'fs';
+
 
 class SendMailNpsService {
   private client: Transporter
@@ -12,8 +16,8 @@ class SendMailNpsService {
           port: account.smtp.port,
           secure: account.smtp.secure,
           auth: {
-              user: account.user,
-              pass: account.pass
+            user: account.user,
+            pass: account.pass
           }
         });
 
@@ -21,12 +25,18 @@ class SendMailNpsService {
       });
   }
 
-  async execute(from: string, subject: string, body: string){
+  async execute(from: string, subject: string, variables: Object, path: string){
+    const templateFileContent = fs.readFileSync(path).toString("utf8");
+
+    const mailTemplateParse = handlebars.compile(templateFileContent)
+
+    const html = mailTemplateParse(variables)
+
     // Message object
     const message = {
       from,
       subject,
-      html: body,
+      html,
       to: 'NPS <noraplay@nps.com.br>',
     };
 

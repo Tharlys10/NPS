@@ -9,7 +9,7 @@ class AnswerController {
     const { value } = request.params;
     const { su_id } = request.query;
 
-    // extencion repository
+    // extension repository
     const surveysUsersRepository = getCustomRepository(SurveysUsersRepository);
 
     // check survey user

@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
 import { SurveysRepository } from "../repositories/SurveysRepository";
+import * as yup from 'yup';
+import { AppError } from "../errors/AppError";
 
-class SurveyConstroller {
-  async show(resquest: Request, response: Response) {
-    const { page, amount } = resquest.query
+
+class SurveyController {
+  async show(request: Request, response: Response) {
+    const { page, amount } = request.query
 
     const skip = !Number(page) || Number(page) <= 0 ? 0 : Number(page) - 1
     const take = !Number(amount) || Number(amount) <= 0 ? 10 : Number(amount)
 
     console.log(skip, take);
 
-    // extencion custom repository
+    // extension custom repository
     const surveysRepository = getCustomRepository(SurveysRepository);
 
     const [surveys, count] = await surveysRepository.findAndCount(
@@ -24,12 +27,24 @@ class SurveyConstroller {
     response.json({ surveys, count })
   };
 
-  async create(resquest: Request, response: Response) {
-    let { title, description } = resquest.body;
+  async create(request: Request, response: Response) {
+    let { title, description } = request.body;
 
     title = title?.toUpperCase();
 
-    // extencion custom repository
+    // validation
+    const schema = yup.object().shape({
+      title: yup.string().required("O titulo é obrigatório"),
+      description: yup.string().required("A descrição é obrigatória")
+    });
+
+    try {
+      await schema.validate(request.body);
+    } catch (err) {
+      throw new AppError(err.message);
+    }
+
+    // extension custom repository
     const surveysRepository = getCustomRepository(SurveysRepository);
 
     // create obj survey
@@ -45,4 +60,4 @@ class SurveyConstroller {
   };
 }
 
-export { SurveyConstroller }
+export { SurveyController }

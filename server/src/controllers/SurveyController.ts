@@ -12,8 +12,6 @@ class SurveyController {
     const skip = !Number(page) || Number(page) <= 0 ? 0 : Number(page) - 1
     const take = !Number(amount) || Number(amount) <= 0 ? 10 : Number(amount)
 
-    console.log(skip, take);
-
     // extension custom repository
     const surveysRepository = getCustomRepository(SurveysRepository);
 

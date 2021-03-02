@@ -22,7 +22,7 @@ describe("Users", () => {
         name: "User Example",
         email: "user@example.com"
       });
-    
+
     expect(response.status).toBe(201);
   });
 
@@ -32,7 +32,7 @@ describe("Users", () => {
         name: "User Example 02",
         email: "user@example.com"
       });
-    
+
     expect(response.status).toBe(409);
   })
 })

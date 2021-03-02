@@ -4,6 +4,7 @@ import { NpsController } from './controllers/NpsController';
 import { SendMailController } from './controllers/SendMailController';
 import { SurveyController } from './controllers/SurveyController';
 import { UserController } from './controllers/UserController';
+import authenticating from './middleware/auth';
 
 const router = Router();
 
@@ -16,7 +17,7 @@ const npsController = new NpsController();
 
 // definitions routes
 // users
-router.post("/users/create", userController.create);
+router.post("/users/create", authenticating, userController.create);
 
 // surveys
 router.get("/surveys/show", surveyController.show);
